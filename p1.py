@@ -9,9 +9,7 @@ catalog={
     "E106": ("Bluetooth Speaker", 1500.0, 30)
 
 }
-bookkeeping={
-    
-}
+orders=[]
 
 def print_catalog():
     print("Catalog: ")
@@ -42,8 +40,18 @@ def place_order():
     totalamount=math.ceil(totalamount*100)/100
     catalog[pid]=(name,price,stock-quantity)
     
-    rating =input("Please give us a rating on a scale of (1-5): ")
-
+    rating =int(input("Please give us a rating on a scale of (1-5): "))
+    if rating < 1 or rating > 5:
+      print("Invalid rating")
+      return
+    
+    order={
+        "Product ID": pid,
+        "Quantity": quantity,
+        "Bill amount": totalamount,
+        "Ratings": rating
+    }
+    orders.append(order)
 
     
 
