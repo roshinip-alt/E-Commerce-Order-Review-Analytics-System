@@ -19,7 +19,7 @@ def print_catalog():
 
 def place_order():
     pid=input("Enter Product id: ").strip()
-    quantity=int(input("Enter the Quantity"))
+    quantity=int(input("Enter the Quantity: "))
     if pid not in catalog:
         print("Item do not exist")
         return
@@ -39,7 +39,7 @@ def place_order():
 
     totalamount=math.ceil(totalamount*100)/100
     catalog[pid]=(name,price,stock-quantity)
-    
+    print("Bill: ",totalamount)
     rating =int(input("Please give us a rating on a scale of (1-5): "))
     if rating < 1 or rating > 5:
       print("Invalid rating")
@@ -53,8 +53,36 @@ def place_order():
     }
     orders.append(order)
 
-    
 
+def analytics_summary():
+    if len(orders) < 3:
+        print("At least 3 successful orders are required.")
+        return
+
+    total_revenue = sum(o["Bill amount"] for o in orders)
+
+    qty = {}
+    ratings = {}
+
+    for o in orders:
+        pid = o["Product ID"]
+        qty[pid] = qty.get(pid, 0) + o["Quantity"]
+        ratings.setdefault(pid, []).append(float(o["Ratings"]))
+
+    most_freq = max(qty, key=qty.get)
+    highest_rated = max(ratings, key=lambda p: max(ratings[p]))
+
+    print("Total Revenue:", total_revenue)
+    print("Most Frequently Ordered Product:", most_freq)
+    print("Highest Rated Product:", highest_rated)
+
+    print("Average Rating per Product:")
+    for pid in ratings:
+        print(pid, "->", round(sum(ratings[pid]) / len(ratings[pid]), 2))
+
+    print("\nRemaining Stock:")
+    for pid, (name, price, stock) in catalog.items():
+        print(pid, "->", stock)
 
 def partb():
     while True:
@@ -78,3 +106,5 @@ def partb():
             break
         else:
             print("Invalid")
+
+partb()
